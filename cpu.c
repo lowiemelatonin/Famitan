@@ -102,6 +102,14 @@ void cpu_execute(CPU_6502 *cpu, uint8_t opcode){
         case 0x0A: // ASL A
             cpu->A <<= 1;
             break;
+        case 0xD0: // BNE Relative
+            {
+                int8_t offset = cpu_fetch(cpu);
+                if(!get_flag(cpu, FLAG_Z)){
+                    cpu->PC += offset;
+                }
+                break;
+            }
         case 0xA9: // LDA #immediate
             cpu->A = cpu_fetch(cpu);
             break;
@@ -111,17 +119,6 @@ void cpu_execute(CPU_6502 *cpu, uint8_t opcode){
         case 0xB5: // LDA Zero Page, X
             cpu->A = cpu_read(addr_zero_page_x(cpu));
             break;
-        case 0xB6: // LDX Zero Page, Y
-            cpu->X = cpu_read(addr_zero_page_y(cpu));
-            break;
-        case 0xD0: // BNE Relative
-            {
-                int8_t offset = cpu_fetch(cpu);
-                if(!get_flag(cpu, FLAG_Z)){
-                    cpu->PC += offset;
-                }
-                break;
-            }
         case 0xAD: // LDA Absolute
             cpu->A = cpu_read(addr_absolute(cpu));
             break;
@@ -131,14 +128,29 @@ void cpu_execute(CPU_6502 *cpu, uint8_t opcode){
         case 0xB9: // LDA Absolute, Y
             cpu->A = cpu_read(addr_absolute_y(cpu));
             break;
-        case 0x6C: // JMP Indirect
-            cpu->PC = addr_indirect(cpu);
-            break;
         case 0xA1: // LDA Indirect, X
             cpu->A = cpu_read(addr_indirect_x(cpu));
             break;
         case 0xB1: // LDA Indirect, Y
             cpu->A = cpu_read(addr_indirect_y(cpu));
+            break;
+        case 0x6C: // JMP Indirect
+            cpu->PC = addr_indirect(cpu);
+            break;
+        case 0xA2: // LDX #immediate
+            cpu->X = cpu_fetch(cpu);
+            break;
+        case 0xA6: // LDX Zero Page
+            cpu->X = cpu_read(addr_zero_page(cpu));
+            break;
+        case 0xB6: // LDX Zero Page, Y
+            cpu->X = cpu_read(addr_zero_page_y(cpu));
+            break;
+        case 0xAE: // LDX Absolute
+            cpu->X = cpu_read(addr_absolute(cpu));
+            break;
+        case 0xBE: // LDX Absolute, Y
+            cpu->X = cpu_read(addr_absolute_y(cpu));
             break;
         default:
             break;
