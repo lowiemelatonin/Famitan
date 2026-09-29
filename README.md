@@ -1,3 +1,3 @@
-NESmu
+Famitan 
 ---
-A Nintendo Entertainment System (NES) Emulator
+A Famicom/NES emulator written in C 
