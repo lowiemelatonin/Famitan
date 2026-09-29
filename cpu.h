@@ -25,12 +25,10 @@ extern uint8_t memory[0x10000];
 
 void set_flag(CPU_6502 *cpu, uint8_t flag, int value);
 int get_flag(CPU_6502 *cpu, uint8_t flag);
-
 void cpu_reset(CPU_6502 *cpu);
-
 uint8_t cpu_read(uint16_t address);
 void cpu_write(uint16_t address, uint8_t value);
-
 uint8_t cpu_fetch(CPU_6502 *cpu);
+void cpu_execute(CPU_6502 *cpu, uint8_t opcode);
 
 #endif

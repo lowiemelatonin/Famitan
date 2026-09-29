@@ -10,5 +10,8 @@ nes
 # Editor
 .vscode/
 
+# TESTS
+tests.c
+
 # MD
 README.md
