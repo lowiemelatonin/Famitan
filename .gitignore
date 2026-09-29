@@ -1,0 +1,12 @@
+# Binary
+nes
+
+# Compilation Files
+*.o
+
+# Debug
+*.d
+
+# Editor
+.vscode/
+.idea/
