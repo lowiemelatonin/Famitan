@@ -9,4 +9,6 @@ nes
 
 # Editor
 .vscode/
-.idea/
+
+# MD
+README.md
