@@ -152,6 +152,21 @@ void cpu_execute(CPU_6502 *cpu, uint8_t opcode){
         case 0xBE: // LDX Absolute, Y
             cpu->X = cpu_read(addr_absolute_y(cpu));
             break;
+        case 0xA0: // LDY #immediate
+            cpu->Y = cpu_fetch(cpu);
+            break;
+        case 0xA4: // LDY Zero Page
+            cpu->Y = cpu_read(addr_zero_page(cpu));
+            break;
+        case 0xB4: // LDY Zero Page, X
+            cpu->Y = cpu_read(addr_zero_page_x(cpu));
+            break;
+        case 0xAC: // LDY Absolute
+            cpu->Y = cpu_read(addr_absolute(cpu));
+            break;
+        case 0xBC: // LDY Absolute, X
+            cpu->Y = cpu_read(addr_absolute_x(cpu));
+            break;
         default:
             break;
     }
