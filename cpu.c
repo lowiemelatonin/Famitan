@@ -188,6 +188,24 @@ void cpu_execute(CPU_6502 *cpu, uint8_t opcode){
         case 0x91: // STA Indirect, Y
             cpu_write(addr_indirect_y(cpu), cpu->A);
             break;
+        case 0x86: // STX Zero Page
+            cpu_write(addr_zero_page(cpu), cpu->X);
+            break;
+        case 0x96: // STX Zero Page, Y
+            cpu_write(addr_zero_page_y(cpu), cpu->X);
+            break;
+        case 0x8E: // STX Absolute
+            cpu_write(addr_absolute(cpu), cpu->X);
+            break;
+        case 0x84: // STY Zero Page
+            cpu_write(addr_zero_page(cpu), cpu->Y);
+            break;
+        case 0x94: // STY Zero Page, X
+            cpu_write(addr_zero_page_x(cpu), cpu->Y);
+            break;
+        case 0x8C: // STY Absolute
+            cpu_write(addr_absolute(cpu), cpu->Y);
+            break;
         default:
             break;
     }
