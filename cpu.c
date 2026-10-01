@@ -14,6 +14,11 @@ int get_flag(CPU_6502 *cpu, uint8_t flag){
     return (cpu->Status & flag) != 0;
 }
 
+void set_zn(CPU_6502 *cpu, uint8_t value){
+    set_flag(cpu, FLAG_Z, value == 0);
+    set_flag(cpu, FLAG_N, value & 0x80);
+}
+
 void cpu_reset(CPU_6502 *cpu){
     cpu->A = 0;
     cpu->X = 0;
@@ -98,9 +103,12 @@ void cpu_execute(CPU_6502 *cpu, uint8_t opcode){
     switch(opcode){
         case 0xE8: // INX
             cpu->X++;
+            set_zn(cpu, cpu->X);
             break;
         case 0x0A: // ASL A
+            set_flag(cpu, FLAG_C, cpu->A & 0x80);
             cpu->A <<= 1;
+            set_zn(cpu, cpu->A);
             break;
         case 0xD0: // BNE Relative
             {
@@ -112,60 +120,78 @@ void cpu_execute(CPU_6502 *cpu, uint8_t opcode){
             }
         case 0xA9: // LDA #immediate
             cpu->A = cpu_fetch(cpu);
+            set_zn(cpu, cpu->A);
             break;
         case 0xA5: // LDA Zero Page
             cpu->A = cpu_read(addr_zero_page(cpu));
+            set_zn(cpu, cpu->A);
             break;
         case 0xB5: // LDA Zero Page, X
             cpu->A = cpu_read(addr_zero_page_x(cpu));
+            set_zn(cpu, cpu->A);
             break;
         case 0xAD: // LDA Absolute
             cpu->A = cpu_read(addr_absolute(cpu));
+            set_zn(cpu, cpu->A);
             break;
         case 0xBD: // LDA Absolute, X
             cpu->A = cpu_read(addr_absolute_x(cpu));
+            set_zn(cpu, cpu->A);
             break;
         case 0xB9: // LDA Absolute, Y
             cpu->A = cpu_read(addr_absolute_y(cpu));
+            set_zn(cpu, cpu->A);
             break;
         case 0xA1: // LDA Indirect, X
             cpu->A = cpu_read(addr_indirect_x(cpu));
+            set_zn(cpu, cpu->A);
             break;
         case 0xB1: // LDA Indirect, Y
             cpu->A = cpu_read(addr_indirect_y(cpu));
+            set_zn(cpu, cpu->A);
             break;
         case 0x6C: // JMP Indirect
             cpu->PC = addr_indirect(cpu);
             break;
         case 0xA2: // LDX #immediate
             cpu->X = cpu_fetch(cpu);
+            set_zn(cpu, cpu->X);
             break;
         case 0xA6: // LDX Zero Page
             cpu->X = cpu_read(addr_zero_page(cpu));
+            set_zn(cpu, cpu->X);
             break;
         case 0xB6: // LDX Zero Page, Y
             cpu->X = cpu_read(addr_zero_page_y(cpu));
+            set_zn(cpu, cpu->X);
             break;
         case 0xAE: // LDX Absolute
             cpu->X = cpu_read(addr_absolute(cpu));
+            set_zn(cpu, cpu->X);
             break;
         case 0xBE: // LDX Absolute, Y
             cpu->X = cpu_read(addr_absolute_y(cpu));
+            set_zn(cpu, cpu->X);
             break;
         case 0xA0: // LDY #immediate
             cpu->Y = cpu_fetch(cpu);
+            set_zn(cpu, cpu->Y);
             break;
         case 0xA4: // LDY Zero Page
             cpu->Y = cpu_read(addr_zero_page(cpu));
+            set_zn(cpu, cpu->Y);
             break;
         case 0xB4: // LDY Zero Page, X
             cpu->Y = cpu_read(addr_zero_page_x(cpu));
+            set_zn(cpu, cpu->Y);
             break;
         case 0xAC: // LDY Absolute
             cpu->Y = cpu_read(addr_absolute(cpu));
+            set_zn(cpu, cpu->Y);
             break;
         case 0xBC: // LDY Absolute, X
             cpu->Y = cpu_read(addr_absolute_x(cpu));
+            set_zn(cpu, cpu->Y);
             break;
         case 0x85: // STA Zero Page
             cpu_write(addr_zero_page(cpu), cpu->A);
