@@ -119,6 +119,21 @@ void sbc(CPU_6502 *cpu, uint8_t value){
     set_zn(cpu, cpu->A);
 }
 
+void and_op(CPU_6502 *cpu, uint8_t value){
+    cpu->A &= value;
+    set_zn(cpu, cpu->A);
+}
+
+void ora(CPU_6502 *cpu, uint8_t value){
+    cpu->A |= value;
+    set_zn(cpu, cpu->A);
+}
+
+void eor(CPU_6502 *cpu, uint8_t value){
+    cpu->A ^= value;
+    set_zn(cpu, cpu->A);
+}
+
 void cpu_execute(CPU_6502 *cpu, uint8_t opcode){
     switch(opcode){
         case 0xE8: // INX
@@ -299,6 +314,78 @@ void cpu_execute(CPU_6502 *cpu, uint8_t opcode){
             break;
         case 0xF1: // SBC Indirect, Y
             sbc(cpu, cpu_read(addr_indirect_y(cpu)));
+            break;
+        case 0x29: // AND #immediate
+            and_op(cpu, cpu_fetch(cpu));
+            break;
+        case 0x25: // AND Zero Page
+            and_op(cpu, cpu_read(addr_zero_page(cpu)));
+            break;
+        case 0x35: // AND Zero Page, X
+            and_op(cpu, cpu_read(addr_zero_page_x(cpu)));
+            break;
+        case 0x2D: // AND Absolute
+            and_op(cpu, cpu_read(addr_absolute(cpu)));
+            break;
+        case 0x3D: // AND Absolute, X
+            and_op(cpu, cpu_read(addr_absolute_x(cpu)));
+            break;
+        case 0x39: // AND Absolute, Y
+            and_op(cpu, cpu_read(addr_absolute_y(cpu)));
+            break;
+        case 0x21: // AND Indirect, X
+            and_op(cpu, cpu_read(addr_indirect_x(cpu)));
+            break;
+        case 0x31: // AND Indirect, Y
+            and_op(cpu, cpu_read(addr_indirect_y(cpu)));
+            break;
+        case 0x09: // ORA #immediate
+            ora(cpu, cpu_fetch(cpu));
+            break;
+        case 0x05: // ORA Zero Page
+            ora(cpu, cpu_read(addr_zero_page(cpu)));
+            break;
+        case 0x15: // ORA Zero Page, X
+            ora(cpu, cpu_read(addr_zero_page_x(cpu)));
+            break;
+        case 0x0D: // ORA Absolute
+            ora(cpu, cpu_read(addr_absolute(cpu)));
+            break;
+        case 0x1D: // ORA Absolute, X
+            ora(cpu, cpu_read(addr_absolute_x(cpu)));
+            break;
+        case 0x19: // ORA Absolute, Y
+            ora(cpu, cpu_read(addr_absolute_y(cpu)));
+            break;
+        case 0x01: // ORA Indirect, X
+            ora(cpu, cpu_read(addr_indirect_x(cpu)));
+            break;
+        case 0x11: // ORA Indirect, Y
+            ora(cpu, cpu_read(addr_indirect_y(cpu)));
+            break;
+        case 0x49: // EOR #immediate
+            eor(cpu, cpu_fetch(cpu));
+            break;
+        case 0x45: // EOR Zero Page
+            eor(cpu, cpu_read(addr_zero_page(cpu)));
+            break;
+        case 0x55: // EOR Zero Page, X
+            eor(cpu, cpu_read(addr_zero_page_x(cpu)));
+            break;
+        case 0x4D: // EOR Absolute
+            eor(cpu, cpu_read(addr_absolute(cpu)));
+            break;
+        case 0x5D: // EOR Absolute, X
+            eor(cpu, cpu_read(addr_absolute_x(cpu)));
+            break;
+        case 0x59: // EOR Absolute, Y
+            eor(cpu, cpu_read(addr_absolute_y(cpu)));
+            break;
+        case 0x41: // EOR Indirect, X
+            eor(cpu, cpu_read(addr_indirect_x(cpu)));
+            break;
+        case 0x51: // EOR Indirect, Y
+            eor(cpu, cpu_read(addr_indirect_y(cpu)));
             break;
         default:
             break;
