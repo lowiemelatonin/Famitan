@@ -99,6 +99,26 @@ uint16_t addr_indirect_y(CPU_6502 *cpu){
     return target + cpu->Y;
 }
 
+void adc(CPU_6502 *cpu, uint8_t value){
+    uint16_t result = cpu->A + value + get_flag(cpu, FLAG_C);
+
+    set_flag(cpu, FLAG_C, result > 0xFF);
+    set_flag(cpu, FLAG_V, (~(cpu->A ^ value) & (cpu->A ^ result) & 0x80) != 0);
+
+    cpu->A = (uint8_t)result;
+    set_zn(cpu, cpu->A);
+}
+
+void sbc(CPU_6502 *cpu, uint8_t value){
+    uint16_t result = cpu->A + (uint8_t)~value + get_flag(cpu, FLAG_C);
+
+    set_flag(cpu, FLAG_C, result & 0x100);
+    set_flag(cpu, FLAG_V, ((cpu->A ^ result) & (~value ^ result) & 0x80) != 0);
+    
+    cpu->A = (uint8_t)result;
+    set_zn(cpu, cpu->A);
+}
+
 void cpu_execute(CPU_6502 *cpu, uint8_t opcode){
     switch(opcode){
         case 0xE8: // INX
