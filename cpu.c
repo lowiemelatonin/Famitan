@@ -252,6 +252,54 @@ void cpu_execute(CPU_6502 *cpu, uint8_t opcode){
         case 0x8C: // STY Absolute
             cpu_write(addr_absolute(cpu), cpu->Y);
             break;
+        case 0x69: // ADC #immediate
+            adc(cpu, cpu_fetch(cpu));
+            break;
+        case 0x65: // ADC Zero Page
+            adc(cpu, cpu_read(addr_zero_page(cpu)));
+            break;
+        case 0x75: // ADC Zero Page, X
+            adc(cpu, cpu_read(addr_zero_page_x(cpu)));
+            break;
+        case 0x6D: // ADC Absolute
+            adc(cpu, cpu_read(addr_absolute(cpu)));
+            break;
+        case 0x7D: // ADC Absolute, X
+            adc(cpu, cpu_read(addr_absolute_x(cpu)));
+            break;
+        case 0x79: // ADC Absolute, Y
+            adc(cpu, cpu_read(addr_absolute_y(cpu)));
+            break;
+        case 0x61: // ADC Indirect, X
+            adc(cpu, cpu_read(addr_indirect_x(cpu)));
+            break;
+        case 0x71: // ADC Indirect, Y
+            adc(cpu, cpu_read(addr_indirect_y(cpu)));
+            break;
+        case 0xE9: // SBC #immediate
+            sbc(cpu, cpu_fetch(cpu));
+            break;
+        case 0xE5: // SBC Zero Page
+            sbc(cpu, cpu_read(addr_zero_page(cpu)));
+            break;
+        case 0xF5: // SBC Zero Page, X
+            sbc(cpu, cpu_read(addr_zero_page_x(cpu)));
+            break;
+        case 0xED: // SBC Absolute
+            sbc(cpu, cpu_read(addr_absolute(cpu)));
+            break;
+        case 0xFD: // SBC Absolute, X
+            sbc(cpu, cpu_read(addr_absolute_x(cpu)));
+            break;
+        case 0xF9: // SBC Absolute, Y
+            sbc(cpu, cpu_read(addr_absolute_y(cpu)));
+            break;
+        case 0xE1: // SBC Indirect, X
+            sbc(cpu, cpu_read(addr_indirect_x(cpu)));
+            break;
+        case 0xF1: // SBC Indirect, Y
+            sbc(cpu, cpu_read(addr_indirect_y(cpu)));
+            break;
         default:
             break;
     }
