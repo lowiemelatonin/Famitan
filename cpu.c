@@ -134,6 +134,14 @@ void eor(CPU_6502 *cpu, uint8_t value){
     set_zn(cpu, cpu->A);
 }
 
+void compare(CPU_6502 *cpu, uint8_t reg, uint8_t value){
+    uint8_t result = reg - value;
+
+    set_flag(cpu, FLAG_C, reg >= value);
+    set_flag(cpu, FLAG_Z, result == 0);
+    set_flag(cpu, FLAG_N, result & 0x80);
+}
+
 void cpu_execute(CPU_6502 *cpu, uint8_t opcode){
     switch(opcode){
         case 0xE8: // INX
@@ -386,6 +394,30 @@ void cpu_execute(CPU_6502 *cpu, uint8_t opcode){
             break;
         case 0x51: // EOR Indirect, Y
             eor(cpu, cpu_read(addr_indirect_y(cpu)));
+            break;
+        case 0xC9: // CMP #immediate
+            compare(cpu, cpu->A, cpu_fetch(cpu));
+            break;
+        case 0xC5: // CMP Zero Page
+            compare(cpu, cpu->A, cpu_read(addr_zero_page(cpu)));
+            break;
+        case 0xD5: // CMP Zero Page, X
+            compare(cpu, cpu->A, cpu_read(addr_zero_page_x(cpu)));
+            break;
+        case 0xCD: // CMP Absolute
+            compare(cpu, cpu->A, cpu_read(addr_absolute(cpu)));
+            break;
+        case 0xDD: // CMP Absolute, X
+            compare(cpu, cpu->A, cpu_read(addr_absolute_x(cpu)));
+            break;
+        case 0xD9: // CMP Absolute, Y
+            compare(cpu, cpu->A, cpu_read(addr_absolute_y(cpu)));
+            break;
+        case 0xC1: // CMP Indirect, X
+            compare(cpu, cpu->A, cpu_read(addr_indirect_x(cpu)));
+            break;
+        case 0xD1: // CMP Indirect, Y
+            compare(cpu, cpu->A, cpu_read(addr_indirect_y(cpu)));
             break;
         default:
             break;
