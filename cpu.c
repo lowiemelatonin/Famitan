@@ -419,6 +419,24 @@ void cpu_execute(CPU_6502 *cpu, uint8_t opcode){
         case 0xD1: // CMP Indirect, Y
             compare(cpu, cpu->A, cpu_read(addr_indirect_y(cpu)));
             break;
+        case 0xE0: // CPX #immediate
+            compare(cpu, cpu->X, cpu_fetch(cpu));
+            break;
+        case 0xE4: // CPX Zero Page
+            compare(cpu, cpu->X, cpu_read(addr_zero_page(cpu)));
+            break;
+        case 0xEC: // CPX Absolute
+            compare(cpu, cpu->X, cpu_read(addr_absolute(cpu)));
+            break;
+        case 0xC0: // CPY #immediate
+            compare(cpu, cpu->Y, cpu_fetch(cpu));
+            break;
+        case 0xC4: // CPY Zero Page
+            compare(cpu, cpu->Y, cpu_read(addr_zero_page(cpu)));
+            break;
+        case 0xCC: // CPY Absolute
+            compare(cpu, cpu->Y, cpu_read(addr_absolute(cpu)));
+            break;
         default:
             break;
     }
