@@ -142,12 +142,22 @@ void compare(CPU_6502 *cpu, uint8_t reg, uint8_t value){
     set_flag(cpu, FLAG_N, result & 0x80);
 }
 
+void inc(CPU_6502 *cpu, uint16_t address){
+    uint8_t value = cpu_read(address);
+    value++;
+    cpu_write(address, value);
+    set_zn(cpu, value);
+}
+
+void dec(CPU_6502 *cpu, uint16_t address){
+    uint8_t value = cpu_read(address);
+    value--;
+    cpu_write(address, value);
+    set_zn(cpu, value);
+}
+
 void cpu_execute(CPU_6502 *cpu, uint8_t opcode){
     switch(opcode){
-        case 0xE8: // INX
-            cpu->X++;
-            set_zn(cpu, cpu->X);
-            break;
         case 0x0A: // ASL A
             set_flag(cpu, FLAG_C, cpu->A & 0x80);
             cpu->A <<= 1;
@@ -436,6 +446,46 @@ void cpu_execute(CPU_6502 *cpu, uint8_t opcode){
             break;
         case 0xCC: // CPY Absolute
             compare(cpu, cpu->Y, cpu_read(addr_absolute(cpu)));
+            break;
+        case 0xE8: // INX
+            cpu->X++;
+            set_zn(cpu, cpu->X);
+            break;
+        case 0xCA: // DEX
+            cpu->X--;
+            set_zn(cpu, cpu->X);
+            break;
+        case 0xC8: // INY
+            cpu->Y++;
+            set_zn(cpu, cpu->Y);
+            break;
+        case 0x88: // DEY
+            cpu->Y--;
+            set_zn(cpu, cpu->Y);
+            break;
+        case 0xE6: // INC Zero Page
+            inc(cpu, addr_zero_page(cpu));
+            break;
+        case 0xF6: // INC Zero Page, X
+            inc(cpu, addr_zero_page_x(cpu));
+            break;
+        case 0xEE: // INC Absolute
+            inc(cpu, addr_absolute(cpu));
+            break;
+        case 0xFE: // INC Absolute, X
+            inc(cpu, addr_absolute_x(cpu));
+            break;
+        case 0xC6: // DEC Zero Page
+            dec(cpu, addr_zero_page(cpu));
+            break;
+        case 0xD6: // DEC Zero Page, X
+            dec(cpu, addr_zero_page_x(cpu));
+            break;
+        case 0xCE: // DEC Absolute
+            dec(cpu, addr_absolute(cpu));
+            break;
+        case 0xDE: // DEC Absolute, X
+            dec(cpu, addr_absolute_x(cpu));
             break;
         default:
             break;
